@@ -1,83 +1,476 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Casa Real Shrine</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Casa Real Shrine: The Ink of Freedom</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    /* Global Reset and Transitions */
+    * {
       margin: 0;
       padding: 0;
-      background-color: #f8f8f8;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      transition: background-color 0.5s, color 0.5s;
     }
-    header {
-      background: url('front-view.jpg') no-repeat center/cover;
-      color: white;
-      text-align: center;
-      padding: 80px 20px;
+
+    /* Body/Global Layout */
+    body {
+      color: #fff;
+      background-color: #000;
+      scroll-behavior: smooth;
+      overflow: hidden; /* disable global scroll */
     }
-    header h1 {
-      background-color: rgba(0, 0, 0, 0.6);
-      display: inline-block;
-      padding: 10px 20px;
-      border-radius: 10px;
+
+    /* Light Mode Toggle */
+    body.light {
+      background-color: #f9f9f9;
+      color: #111;
     }
-    main {
-      padding: 20px;
-      max-width: 900px;
-      margin: auto;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    section {
-      margin-bottom: 30px;
-    }
-    img {
+
+    /* === SECTIONS (Full Viewport) === */
+    section, header {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      border-radius: 10px;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+      z-index: 5; /* Base z-index for sections */
+    }
+
+    section.active, header.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 5; 
+    }
+
+
+    #home { background-image: url('images/casa-real-exterior-hero.jpg'); } 
+    #history { background-image: url('images/printing-press-exhibit.jpg'); } 
+    #support { background-image: url('images/malolos-congress-mural.jpg'); } 
+    #visit { background-image: url('images/bulacan-map-or-landmark.jpg'); } 
+
+    /* Overlay for Readability */
+    section::before, header::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+      z-index: 0;
+      transition: background 0.5s;
+    }
+
+    body.light section::before,
+    body.light header::before {
+      background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.6), rgba(255,255,255,0.8));
+    }
+
+    section > *, header > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === SCROLLABLE SECTIONS === */
+    #history, #support {
+      overflow-y: auto;
+      max-height: 100vh;
+      -webkit-overflow-scrolling: touch;
+      justify-content: flex-start; 
+      padding-top: 80px; 
+      padding-bottom: 80px; 
+    }
+    
+    #home, #visit {
+        justify-content: center;
+    }
+
+    /* === NAV === */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 15px 0;
+      z-index: 10;
+      transition: background 0.5s;
+    }
+
+    body.light nav {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    body.light nav a { color: #000; }
+
+    nav a:hover, nav a.active-link {
+      color: #ffcc00;
+    }
+
+    /* === THEME TOGGLE === */
+    .theme-toggle {
+      position: absolute;
+      right: 28px;
+      top: 58px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid #ffcc00;
+      color: #ffcc00;
+      background: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .theme-toggle:hover {
+      background: #ffcc00;
+      color: #000;
+    }
+
+    /* === HEADER (HOME) === */
+    header h1 {
+      font-size: 3rem;
+      color: #ffcc00;
+    }
+
+    header p {
+      font-size: 1.4rem;
+      max-width: 700px;
       margin-top: 10px;
     }
-    footer {
-      text-align: center;
-      padding: 10px;
-      background-color: #222;
-      color: white;
-      margin-top: 20px;
+    
+    .cta-button {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 15px 35px;
+        background-color: #ffcc00;
+        color: #000;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 5px;
+        transition: background-color 0.3s;
     }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Casa Real Shrine</h1>
-  </header>
-  <main>
-    <section>
-      <h2>About Casa Real Shrine</h2>
-      <p>
-        The Casa Real Shrine, located in Malolos, Bulacan, is a historic landmark that once served as the office of the gobernadorcillo during the Spanish era. It also became an important government building during the First Philippine Republic.
-      </p>
-    </section>
+    
+    .cta-button:hover {
+        background-color: #e0b400;
+    }
 
-    <section>
-      <h2>Exterior View</h2>
-      <img src="front-view.jpg" alt="Casa Real Shrine Front View">
-    </section>
+    /* === CONTENT LAYOUTS (History/Support/Visit) === */
+    .content-area {
+      max-width: 1100px;
+      width: 90%;
+      text-align: center;
+      padding-bottom: 40px;
+    }
+    
+    .content-area h2 {
+        font-size: 2.5rem;
+        color: #ffcc00;
+        margin-bottom: 20px;
+    }
+    
+    /* === HISTORY SECTION (Mobile Card Style - Default) === */
+    .content-area.mobile-style {
+        max-width: 450px; /* Constrain width for mobile view */
+    }
 
-    <section>
-      <h2>Interior</h2>
-      <img src="interior.jpg" alt="Casa Real Shrine Interior">
-    </section>
+    .history-grid {
+        /* Default: Block display for vertical stacking on small screens */
+        display: block; 
+        gap: 0; 
+        margin-top: 40px;
+    }
+    
+    .history-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px; 
+        backdrop-filter: blur(5px);
+        text-align: left;
+        margin-bottom: 25px; /* Margin for stacked cards */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
+    }
+    
+    .history-card img {
+        width: 100%;
+        height: 200px; 
+        object-fit: cover;
+        border-radius: 8px; 
+        margin-bottom: 15px;
+        background-color: rgba(255, 255, 255, 0.05); 
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-    <section>
-      <h2>Museum Hall</h2>
-      <img src="museum-hall.jpg" alt="Casa Real Shrine Museum Hall">
-    </section>
-  </main>
-  <footer>
-    <p>© 2025 Casa Real Shrine Virtual Tour</p>
-  </footer>
-</body>
+    .history-card h3 {
+        color: #ffcc00; /* Dark mode title color (Gold/Yellow) */
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .history-card p {
+        color: #ddd; /* Dark mode paragraph color (Light Gray) */
+    }
+    
+    /* FIX: History card text color change in light mode */
+    body.light .history-card h3 {
+        color: #ffcc00; /* Dark gray for titles in light mode */
+    }
+
+    body.light .history-card p {
+        color: #333; /* Medium-dark gray for body text in light mode */
+    }
+
+    body.light .history-card {
+        background: rgba(0, 0, 0, 0.05); /* Optional: Slight transparent dark background for card in light mode */
+    }
+
+    /* Support/Gallery Layout */
+    .support-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 40px;
+    }
+    
+    .support-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        backdrop-filter: blur(5px);
+    }
+    
+    .support-card h4 {
+        color: #ffcc00;
+        margin-bottom: 10px;
+    }
+    
+    /* === FOOTER (FIXED) === */    
+    footer {    
+      background: #111;    
+      color: #ccc;    
+      text-align: center;    
+      padding: 15px 0; 
+      position: fixed; 
+      bottom: 0;    
+      width: 100%;    
+      z-index: 15; 
+      transition: background 0.5s, color 0.5s;    
+    }    
+
+    body.light footer {    
+      background: #eaeaea;    
+      color: #444;    
+    }    
+
+    /* === TRANSITION OVERLAY (FIXED) === */    
+    .fade-overlay {    
+      position: fixed;    
+      top: 50%;    
+      left: 50%;    
+      width: 0;    
+      height: 0;    
+      background: black; /* Default: Dark mode transition color */
+      border-radius: 50%;    
+      opacity: 0;    
+      z-index: 20; 
+      pointer-events: none;    
+      transform: translate(-50%, -50%) scale(0.2);    
+      transition: transform 0.6s ease, opacity 0.3s ease; 
+    }    
+
+    .fade-overlay.active {    
+      opacity: 1;    
+      width: 200vmax;    
+      height: 200vmax;    
+      transform: translate(-50%, -50%) scale(1);    
+      pointer-events: all;    
+    } 
+    
+    /* FIX: Change transition color in light mode */
+    body.light .fade-overlay {
+        background: white; 
+    }
+    
+    /* === MEDIA QUERY FOR WIDE SCREENS (WINDOWS MODE) === */
+    @media (min-width: 768px) {
+        .content-area.mobile-style {
+            max-width: 1100px; 
+        }
+
+        .history-grid {
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 30px; 
+        }
+        
+        .history-card {
+            margin-bottom: 0; 
+        }
+    }
+
+  </style>    
+</head>    
+<body>    
+  <div class="fade-overlay"></div>    
+  <nav>    
+    <a class="active-link" data-target="home">Home</a>    
+    <a data-target="history">History</a>    
+    <a data-target="support">Support</a>    
+    <a data-target="visit">Visit</a>    
+    <button class="theme-toggle" id="themeToggle">☀️</button>    
+  </nav>      
+  
+  <header id="home" class="active">    
+    <h1>The Ink of Freedom: Casa Real Shrine</h1>    
+    <p>This National Historical Landmark is the Printing Press and National Treasury of the First Philippine Republic. We need your help to keep its story alive.</p>
+    
+  </header>      
+  
+  <section id="history">    
+    <div class="content-area mobile-style">    
+      <h2>The Administrative Heart of the Revolution</h2>
+      <div class="history-grid">
+        
+        <div class="history-card">
+          <img src="building-image.jpg" alt="The Government Building Image">
+          <h3>The Government Building</h3>
+          <p>Originally built as the Casa Tribunal during the Spanish colonial period, this structure served as the seat of government for Malolos.</p>
+        </div>
+        
+        <div class="history-card">
+          <img src="museum-hall-image.jpg" alt="The Museum Hall Image">
+          <h3>The Museum Hall</h3>
+          <p>Inside, the museum showcases historical artifacts and documents from the First Philippine Republic and the city’s rich heritage. It is here that we preserve the physical memory of our first republic.</p>
+        </div>
+        
+        <div class="history-card">
+          <img src="printing-press-image.jpg" alt="The Printing Press Image">
+          <h3>The Printing Press</h3>
+          <p>This room housed the official printing press of the Malolos Republic, responsible for publishing *El Heraldo de la Revolución* and other vital decrees. The ink of our independence was literally spread from this spot.</p>
+        </div>
+        
+        <div class="history-card">
+          <img src="preservation-image.jpg" alt="Preservation Image">
+          <h3>Preservation Imperative</h3>
+          <p>Preserving the Casa Real is protecting the tangible evidence of our nation's first self-governance. It's an act of national memory, ensuring future generations understand the full scope of our fight for freedom.</p>
+        </div>
+        
+      </div>
+    </div>    
+  </section>      
+  
+  <section id="support">    
+    <div class="content-area">
+      <h2>Join the Preservation Pledge: Protect Our History</h2>    
+      <div class="support-grid">    
+        <div class="support-card">
+            <h4>1. Be a Witness</h4>
+            <p>Your visit is the most important act of preservation. The PHP 30 entrance fee directly funds maintenance and educational programs.</p>
+        </div>
+        <div class="support-card">
+            <h4>2. Share the Ink</h4>
+            <p>Use #InksofFreedom and #PreservePH on social media. Share your photos and the history you learned to fight public apathy.</p>
+        </div>
+        <div class="support-card">
+            <h4>3. Dedicate Time</h4>
+            <p>We welcome volunteers for documentation, cleaning, and guided tours. Email us to join our next heritage workday.</p>
+        </div>
+        <div class="support-card">
+            <h4>4. Donate Artifacts</h4>
+            <p>If you or your family hold documents or artifacts related to Bulacan's history, consider donating or lending them to the museum.</p>
+        </div>
+      </div>    
+    </div>    
+  </section>      
+  
+  <section id="visit">    
+    <div class="content-area">
+      <h2>Plan Your Visit to Malolos</h2>    
+      <div style="max-width: 1000px; background: rgba(255,255,255,0.1); padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.8);">
+        <p style="font-size: 1.1rem; line-height: 1.8;">
+            Address: Paseo del Congreso, Malolos City, Bulacan.<br>
+            Operating Hours: Tuesday to Sunday, 9:00 AM – 4:00 PM.<br>
+            Entrance Fee: PHP 30 (Adults), PHP 20 (Students/Seniors).<br><br>
+            The Casa Real Shrine is a short walk from Barasoain Church, making it perfect for a historic day trip.
+        </p>
+        <div style="height: 300px; background: #333; margin-top: 20px; color: #fff; display: flex; align-items: center; justify-content: center;">
+            [Google Maps]
+        </div>
+      </div>
+    </div>    
+  </section>      
+  
+  <footer>    
+    <p>© 2025 Casa Real Shrine Preservation Initiative | #InksofFreedom</p>    
+  </footer>      
+  
+  <script>    
+    const navLinks = document.querySelectorAll("nav a");    
+    const fadeOverlay = document.querySelector(".fade-overlay");    
+    
+    navLinks.forEach(link => {    
+      link.addEventListener("click", (e) => {  
+        e.preventDefault(); 
+        const target = link.getAttribute("data-target");    
+        const current = document.querySelector(".active");    
+        const next = document.getElementById(target);    
+    
+        if (current.id === target) return;    
+    
+        navLinks.forEach(l => l.classList.remove("active-link"));    
+        link.classList.add("active-link");    
+    
+        // 1. Start the overlay transition
+        fadeOverlay.classList.add("active");    
+        
+        // 2. Wait for the overlay to fully cover the screen (500ms is safe before the 600ms transition ends)
+        setTimeout(() => {    
+          // 3. Swap the active section while the overlay is opaque
+          current.classList.remove("active");    
+          next.classList.add("active");    
+        }, 200); // Wait slightly less than the 600ms transition time
+        
+        // 4. Wait for the sections to swap, then hide the overlay
+        setTimeout(() => {
+            fadeOverlay.classList.remove("active");    
+        }, 500); // Give the sections a little extra time to become active before starting the fade-out
+
+      });    
+    });    
+    
+    // Dark/Light Mode    
+    const themeToggle = document.getElementById("themeToggle");    
+    themeToggle.addEventListener("click", () => {    
+      document.body.classList.toggle("light");    
+      themeToggle.textContent = document.body.classList.contains("light")    
+        ? "🌙"    
+        : "☀️";    
+    });    
+  </script>    
+</body>    
 </html>
-
